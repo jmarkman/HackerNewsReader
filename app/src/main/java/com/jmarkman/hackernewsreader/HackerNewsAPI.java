@@ -3,7 +3,11 @@ package com.jmarkman.hackernewsreader;
 import android.net.Uri;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 
 public class HackerNewsAPI
 {
@@ -63,5 +67,45 @@ public class HackerNewsAPI
         }
 
         return url;
+    }
+
+    /**
+     * Fetches the JSON results for the URL
+     * @param url - the API url as a URL
+     * @return - the JSON results as a String
+     * @throws IOException
+     */
+    public static String getJSON(URL url) throws IOException
+    {
+        // Establish connection to API
+        HttpURLConnection conn =  (HttpURLConnection) url.openConnection();
+        // Actually read the data from the API
+        InputStream stream = conn.getInputStream();
+        // Use a scanner to read the contents retrieved from the stream and parse it
+        Scanner scan = new Scanner(stream);
+        scan.useDelimiter("\\A");
+
+        try
+        {
+            if (scan.hasNext())
+            {
+                return scan.next();
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e("JSON Fetch Error","Something went wrong while fetching JSON in getJSON");
+            return null;
+        }
+        finally
+        {
+            // Regardless of the result, make sure that the connection
+            // to the API is severed to prevent various errors and leaks
+            conn.disconnect();
+        }
     }
 }
