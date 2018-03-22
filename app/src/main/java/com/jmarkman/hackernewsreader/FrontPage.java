@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 public class FrontPage extends AppCompatActivity
 {
-
     private ProgressBar loadingProgress;
     private RecyclerView rvArticles;
 
@@ -25,7 +24,7 @@ public class FrontPage extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_front_page);
 
-        rvArticles = findViewById(R.id.front_page_articles);
+        rvArticles = findViewById(R.id.rv_front_page_articles);
         loadingProgress = findViewById(R.id.front_page_progress);
 
         try
@@ -39,6 +38,11 @@ public class FrontPage extends AppCompatActivity
             ex.printStackTrace();
         }
 
+        // Create a LayoutManager for the RecyclerView
+        // A LayoutManager is responsible for measuring and positioning item views within a
+        // RecyclerView as well as determining the policy for when to recycle item views
+        // that are no longer visible to the user.
+        // https://developer.android.com/reference/android/support/v7/widget/RecyclerView.LayoutManager.html
         LinearLayoutManager articlesLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvArticles.setLayoutManager(articlesLayoutManager);
@@ -50,7 +54,7 @@ public class FrontPage extends AppCompatActivity
         protected ArrayList<String> doInBackground(URL... urls) {
             URL searchURL = urls[0];
             String articleIDJSON = null; // variable for storing article ID JSON
-            ArrayList<String> result = null; // variable for storing story response JSON
+            ArrayList<String> result = new ArrayList<>(); // variable for storing story response JSON
 
             try
             {
@@ -80,10 +84,12 @@ public class FrontPage extends AppCompatActivity
         @Override
         protected void onPostExecute(ArrayList<String> result)
         {
-            //TextView jsonResult = findViewById(R.id.json_results);
-            //jsonResult.setText(result);
+            // Create a reference to the TextView that is used to display errors
             TextView tvError = findViewById(R.id.front_page_error);
+            // Make sure that the progress bar is invisible once all tasks are done
             loadingProgress.setVisibility(View.INVISIBLE);
+
+            // Logic for if no results are returned; if no results, display an error
             if (result == null || result.size() == 0)
             {
                 rvArticles.setVisibility(View.INVISIBLE);
@@ -95,6 +101,10 @@ public class FrontPage extends AppCompatActivity
                 tvError.setVisibility(View.INVISIBLE);
             }
 
+            // Get the article data from the JSON, put the data for each article in
+            // an article object, and then put that object in an ArrayList of Articles
+            // Then, use that ArrayList as the source for our ArticleAdapter, and
+            // finally set the RecyclerView to use that adapter
             ArrayList<Article> articles = HackerNewsAPI.getArticlesFromJSON(result);
             ArticleAdapter adapter = new ArticleAdapter(articles);
 
@@ -105,6 +115,7 @@ public class FrontPage extends AppCompatActivity
         protected void onPreExecute()
         {
             super.onPreExecute();
+            // Display the progress bar during execution
             loadingProgress.setVisibility(View.VISIBLE);
         }
     }

@@ -23,7 +23,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
     {
         Context context = parent.getContext();
         View itemView = LayoutInflater.from(context)
-                .inflate(R.layout.activity_front_page, parent, false);
+                .inflate(R.layout.front_page_stub, parent, false);
 
         return new ArticleViewHolder(itemView);
     }
@@ -31,12 +31,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
     @Override
     public void onBindViewHolder(ArticleAdapter.ArticleViewHolder holder, int position)
     {
-
+        Article article = articles.get(position);
+        holder.bind(article);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return articles.size();
     }
 
     public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -48,7 +49,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         TextView tvUserScore;
         TextView tvComments;
 
-        public ArticleViewHolder(View itemView) {
+        public ArticleViewHolder(View itemView)
+        {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.stub_article_title);
             tvSource = itemView.findViewById(R.id.stub_article_source);

@@ -6,10 +6,16 @@
     android:layout_height="match_parent"
     tools:context="com.jmarkman.hackernewsreader.FrontPage">
 
+    <!--
+    Make sure that the layout_height is set to wrap_content so
+    the thing actually displays; everything can be successful
+    but won't render unless the RecyclerView is set to wrap
+    https://stackoverflow.com/a/30409623
+    -->
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/front_page_articles"
+        android:id="@+id/rv_front_page_articles"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -18,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"/>
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/front_page_error"
@@ -50,6 +56,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </android.support.constraint.ConstraintLayout>

@@ -143,7 +143,7 @@ public class HackerNewsAPI
     // TODO: Make sure that all params returned from JSON always contain information
     /**
      * Fetches the JSON for each article and stores each article in an Article object
-     * @param json the list of articles in JSON format
+     * @param json an ArrayList of strings that represent the JSON for each article
      * @return an ArrayList of Article objects
      */
     public static ArrayList<Article> getArticlesFromJSON(ArrayList<String> json)
@@ -159,20 +159,42 @@ public class HackerNewsAPI
 
         try
         {
-            JSONArray arrayArticles = new JSONArray(json);
-            int numArticles = arrayArticles.length();
+            int numArticles = json.size();
 
             for (int i = 0; i < numArticles; i++)
             {
-                JSONObject articleJSON = arrayArticles.getJSONObject(i);
+                JSONObject articleJSON = new JSONObject(json.get(i));
 
-                String normalDate = formatDateFromUnix(articleJSON.getString(DATE));
+                String articleURL;
+                String numComments;
+                String normalDate;
+
+                if (articleJSON.has(ARTICLE_URL))
+                {
+                    articleURL = articleJSON.getString(ARTICLE_URL);
+                }
+                else
+                {
+                    articleURL = "HN Thread";
+                }
+
+                if (articleJSON.has(COMMENTS))
+                {
+                    numComments = articleJSON.getString(COMMENTS);
+                }
+                else
+                {
+                    numComments = "0";
+                }
+
+                normalDate = formatDateFromUnix(articleJSON.getString(DATE));
+
 
                 Article article = new Article(
                         articleJSON.getString(TITLE),
-                        articleJSON.getString(ARTICLE_URL),
+                        articleURL,
                         normalDate,
-                        articleJSON.getString(COMMENTS),
+                        numComments,
                         articleJSON.getString(USER),
                         articleJSON.getString(SCORE)
                 );
@@ -183,6 +205,7 @@ public class HackerNewsAPI
         catch (JSONException jse)
         {
             jse.printStackTrace();
+
         }
 
         return articles;
