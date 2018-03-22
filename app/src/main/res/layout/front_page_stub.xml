@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_weight="15"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/newspaper_icon"
+        android:padding="8dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="85"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/stub_article_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title TextView"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/stub_article_source"
+            android:textSize="12sp"
+            android:text="Source TextView"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/stub_article_date"
+                android:textSize="10sp"
+                android:text="Date TextView"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/stub_submitter"
+                android:textSize="10sp"
+                android:text="Submitter TextView"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/stub_article_score"
+                android:textSize="10sp"
+                android:text="Score TextView"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/stub_article_comments"
+                android:textSize="10sp"
+                android:text="Comments TextView"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

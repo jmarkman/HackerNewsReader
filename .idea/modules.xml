@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/HackerNewsReader.iml" filepath="$PROJECT_DIR$/.idea/HackerNewsReader.iml" />
-      <module fileurl="file://C:\Users\MARKMAN\Documents\Code\CSC240\HackerNewsReader\.idea\HackerNewsReader.iml" filepath="C:\Users\MARKMAN\Documents\Code\CSC240\HackerNewsReader\.idea\HackerNewsReader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HackerNewsReader.iml" filepath="$PROJECT_DIR$/HackerNewsReader.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\MARKMAN\Documents\Code\CSC240\HackerNewsReader\app\app.iml" filepath="C:\Users\MARKMAN\Documents\Code\CSC240\HackerNewsReader\app\app.iml" />
     </modules>
   </component>
 </project>

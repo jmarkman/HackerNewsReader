@@ -3,42 +3,48 @@ package com.jmarkman.hackernewsreader;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class FrontPageStub implements Parcelable
+public class Article implements Parcelable
 {
     public String articleTitle;
     public String articleUrl;
     public String submissionTime;
     public String numComments;
+    public String submittedBy;
+    public String userScore;
 
-    public FrontPageStub(String articleTitle, String articleUrl, String submissionTime, String numComments)
+    public Article(String articleTitle, String articleUrl, String submissionTime, String numComments, String submittedBy, String userScore)
     {
         this.articleTitle = articleTitle;
         this.articleUrl = articleUrl;
         this.submissionTime = submissionTime;
         this.numComments = numComments;
+        this.submittedBy = submittedBy;
+        this.userScore = userScore;
     }
 
 
-    protected FrontPageStub(Parcel in)
+    protected Article(Parcel in)
     {
         articleTitle = in.readString();
         articleUrl = in.readString();
         submissionTime = in.readString();
         numComments = in.readString();
+        submittedBy = in.readString();
+        userScore = in.readString();
     }
 
-    public static final Creator<FrontPageStub> CREATOR = new Creator<FrontPageStub>()
+    public static final Creator<Article> CREATOR = new Creator<Article>()
     {
         @Override
-        public FrontPageStub createFromParcel(Parcel in)
+        public Article createFromParcel(Parcel in)
         {
-            return new FrontPageStub(in);
+            return new Article(in);
         }
 
         @Override
-        public FrontPageStub[] newArray(int size)
+        public Article[] newArray(int size)
         {
-            return new FrontPageStub[size];
+            return new Article[size];
         }
     };
 
@@ -55,5 +61,7 @@ public class FrontPageStub implements Parcelable
         parcel.writeString(articleUrl);
         parcel.writeString(submissionTime);
         parcel.writeString(numComments);
+        parcel.writeString(submittedBy);
+        parcel.writeString(userScore);
     }
 }
