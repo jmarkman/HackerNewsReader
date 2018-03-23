@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:weightSum="100">
     <!--
     The parent LinearLayout should wrap content so everything displays properly
     when rendered in the RecyclerView and there aren't any huge gaps between
@@ -11,9 +12,10 @@
      -->
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="35dp"
         android:layout_weight="15"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="left|center"
         app:srcCompat="@drawable/newspaper_icon"
         android:padding="8dp"/>
 
@@ -27,19 +29,24 @@
             android:id="@+id/stub_article_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:maxLength="30"
             android:text="Title TextView"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/stub_article_source"
             android:textSize="12sp"
+            android:maxLines="1"
+            android:maxLength="30"
             android:text="Source TextView"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="100"
             android:orientation="horizontal">
 
             <TextView
@@ -47,31 +54,47 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/stub_article_date"
                 android:textSize="10sp"
+                android:textAlignment="textStart"
+                android:layout_gravity="start"
+                android:layout_weight="50"
                 android:text="Date TextView"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/stub_submitter"
+                android:layout_weight="50"
                 android:textSize="10sp"
-                android:text="Submitter TextView"/>
+                android:text="Submitter TextView"
+                android:textAlignment="textStart"
+                android:layout_gravity="start"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="100"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/stub_article_score"
+                android:layout_weight="50"
                 android:textSize="10sp"
                 android:text="Score TextView"/>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/stub_article_comments"
+                android:layout_weight="50"
                 android:textSize="10sp"
                 android:text="Comments TextView"/>
 
         </LinearLayout>
 
-    </LinearLayout>
+     </LinearLayout>
 
 </LinearLayout>
