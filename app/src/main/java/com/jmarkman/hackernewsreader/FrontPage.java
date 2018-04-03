@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -18,6 +19,8 @@ public class FrontPage extends AppCompatActivity
 {
     private ProgressBar loadingProgress;
     private RecyclerView rvArticles;
+    private EndlessRecyclerViewScrollListener scrollListener;
+    private ArrayList<Article> allArticles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,16 @@ public class FrontPage extends AppCompatActivity
 
         rvArticles = findViewById(R.id.rv_front_page_articles);
         loadingProgress = findViewById(R.id.front_page_progress);
+        scrollListener = new EndlessRecyclerViewScrollListener()
+        {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view)
+            {
+                loadMoreArticles(page);
+            }
+        };
+
+        rvArticles.addOnScrollListener(scrollListener);
 
         try
         {
@@ -46,6 +59,11 @@ public class FrontPage extends AppCompatActivity
         LinearLayoutManager articlesLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvArticles.setLayoutManager(articlesLayoutManager);
+    }
+
+    private void loadMoreArticles(int offset)
+    {
+
     }
 
     public class ArticleQueryTask extends AsyncTask<URL, Void, ArrayList<String>>
@@ -105,8 +123,13 @@ public class FrontPage extends AppCompatActivity
             // an article object, and then put that object in an ArrayList of Articles
             // Then, use that ArrayList as the source for our ArticleAdapter, and
             // finally set the RecyclerView to use that adapter
-            ArrayList<Article> articles = HackerNewsAPI.getArticlesFromJSON(result);
-            ArticleAdapter adapter = new ArticleAdapter(articles);
+            allArticles = HackerNewsAPI.getArticlesFromJSON(result);
+            ArrayList<Article> articleGroup = new ArrayList<>();
+            for (int i = 0; i < 9; i++)
+            {
+                articleGroup.add(allArticles.get(i));
+            }
+            ArticleAdapter adapter = new ArticleAdapter(articleGroup);
 
             rvArticles.setAdapter(adapter);
         }
