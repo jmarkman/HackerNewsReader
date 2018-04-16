@@ -1,6 +1,7 @@
 package com.jmarkman.hackernewsreader;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +75,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         @Override
         public void onClick(View view)
         {
-            return;
+            int position = getAdapterPosition();
+            Article selectedArticle = articles.get(position);
+            Intent intent = new Intent(view.getContext(), ArticleDetail.class);
+            intent.putExtra("Article", selectedArticle);
+            view.getContext().startActivity(intent);
         }
     }
 }
