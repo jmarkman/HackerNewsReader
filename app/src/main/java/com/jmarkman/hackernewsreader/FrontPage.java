@@ -21,6 +21,7 @@ public class FrontPage extends AppCompatActivity
     private RecyclerView rvArticles;
     private EndlessRecyclerViewScrollListener scrollListener;
     private ArrayList<Article> allArticles;
+    private ArrayList<Article> articleGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,16 @@ public class FrontPage extends AppCompatActivity
 
         rvArticles = findViewById(R.id.rv_front_page_articles);
         loadingProgress = findViewById(R.id.front_page_progress);
-        scrollListener = new EndlessRecyclerViewScrollListener()
+
+        // Create a LayoutManager for the RecyclerView
+        // A LayoutManager is responsible for measuring and positioning item views within a
+        // RecyclerView as well as determining the policy for when to recycle item views
+        // that are no longer visible to the user.
+        // https://developer.android.com/reference/android/support/v7/widget/RecyclerView.LayoutManager.html
+        LinearLayoutManager articlesLayoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(articlesLayoutManager)
         {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view)
@@ -42,7 +52,8 @@ public class FrontPage extends AppCompatActivity
 
         try
         {
-            URL topStories = HackerNewsAPI.buildTopStoriesURL();
+            HackerNewsAPI hnAPI = new HackerNewsAPI();
+            URL topStories = hnAPI.buildTopStoriesURL();
             new ArticleQueryTask().execute(topStories);
         }
         catch (Exception ex)
@@ -51,25 +62,26 @@ public class FrontPage extends AppCompatActivity
             ex.printStackTrace();
         }
 
-        // Create a LayoutManager for the RecyclerView
-        // A LayoutManager is responsible for measuring and positioning item views within a
-        // RecyclerView as well as determining the policy for when to recycle item views
-        // that are no longer visible to the user.
-        // https://developer.android.com/reference/android/support/v7/widget/RecyclerView.LayoutManager.html
-        LinearLayoutManager articlesLayoutManager =
-                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
         rvArticles.setLayoutManager(articlesLayoutManager);
     }
 
     private void loadMoreArticles(int offset)
     {
+        for (int i = offset; i < offset + 10; i++)
+        {
+            articleGroup.add(allArticles.get(i));
+        }
 
+        ArticleAdapter adapter = new ArticleAdapter(articleGroup);
     }
 
     public class ArticleQueryTask extends AsyncTask<URL, Void, ArrayList<String>>
     {
         @Override
-        protected ArrayList<String> doInBackground(URL... urls) {
+        protected ArrayList<String> doInBackground(URL... urls)
+        {
+            HackerNewsAPI hnAPI = new HackerNewsAPI();
             URL searchURL = urls[0];
             String articleIDJSON = null; // variable for storing article ID JSON
             ArrayList<String> result = new ArrayList<>(); // variable for storing story response JSON
@@ -77,18 +89,18 @@ public class FrontPage extends AppCompatActivity
             try
             {
                 // Get the JSON array filled with the article IDs
-                articleIDJSON = HackerNewsAPI.getJSON(searchURL);
+                articleIDJSON = hnAPI.getJSON(searchURL);
 
                 // Store the article IDs in an ArrayList to turn them into URLs for API requests
-                ArrayList<String> articleIDs = HackerNewsAPI.getStoryIDsFromJSON(articleIDJSON);
+                ArrayList<String> articleIDs = hnAPI.getStoryIDsFromJSON(articleIDJSON);
 
                 // For each API request in articleIDs, build the API request for each story,
                 // retrieve the JSON response as a string, and store the response in an
                 // ArrayList to be returned to onPostExecute
                 for (String url : articleIDs)
                 {
-                    URL articleURL = HackerNewsAPI.buildStoryURL(url);
-                    String jsonResult = HackerNewsAPI.getJSON(articleURL);
+                    URL articleURL = hnAPI.buildStoryURL(url);
+                    String jsonResult = hnAPI.getJSON(articleURL);
                     result.add(jsonResult);
                 }
             }
@@ -102,6 +114,7 @@ public class FrontPage extends AppCompatActivity
         @Override
         protected void onPostExecute(ArrayList<String> result)
         {
+            HackerNewsAPI hnAPI = new HackerNewsAPI();
             // Create a reference to the TextView that is used to display errors
             TextView tvError = findViewById(R.id.front_page_error);
             // Make sure that the progress bar is invisible once all tasks are done
@@ -123,8 +136,9 @@ public class FrontPage extends AppCompatActivity
             // an article object, and then put that object in an ArrayList of Articles
             // Then, use that ArrayList as the source for our ArticleAdapter, and
             // finally set the RecyclerView to use that adapter
-            allArticles = HackerNewsAPI.getArticlesFromJSON(result);
-            ArrayList<Article> articleGroup = new ArrayList<>();
+            allArticles = hnAPI.getArticlesFromJSON(result);
+
+            articleGroup = new ArrayList<>();
             for (int i = 0; i < 9; i++)
             {
                 articleGroup.add(allArticles.get(i));

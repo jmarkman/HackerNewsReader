@@ -18,15 +18,15 @@ import java.util.Scanner;
 
 public class HackerNewsAPI
 {
-    private static final String API_URL = "https://hacker-news.firebaseio.com";
+    private final String API_URL = "https://hacker-news.firebaseio.com";
 
-    private HackerNewsAPI() { }
+    public HackerNewsAPI() { }
 
     /**
      * Constructs the top stories API url
      * @return the top stories API url as a URL
      */
-    public static URL buildTopStoriesURL()
+    public URL buildTopStoriesURL()
     {
         URL url = null;
 
@@ -53,7 +53,7 @@ public class HackerNewsAPI
      * @param json the response JSON from the top stories API call
      * @return an array list of type string
      */
-    public static ArrayList<String> getStoryIDsFromJSON(String json)
+    public ArrayList<String> getStoryIDsFromJSON(String json)
     {
         ArrayList<String> articleIDs = new ArrayList<>();
         try
@@ -77,7 +77,7 @@ public class HackerNewsAPI
      * @param storyId the story ID to access as a string
      * @return the story API url as a URL
      */
-    public static URL buildStoryURL(String storyId)
+    public URL buildStoryURL(String storyId)
     {
         URL url = null;
 
@@ -106,7 +106,7 @@ public class HackerNewsAPI
      * @return - the JSON results as a String
      * @throws IOException
      */
-    public static String getJSON(URL url) throws IOException
+    public String getJSON(URL url) throws IOException
     {
         // Establish connection to API
         HttpURLConnection conn =  (HttpURLConnection) url.openConnection();
@@ -146,7 +146,7 @@ public class HackerNewsAPI
      * @param json an ArrayList of strings that represent the JSON for each article
      * @return an ArrayList of Article objects
      */
-    public static ArrayList<Article> getArticlesFromJSON(ArrayList<String> json)
+    public ArrayList<Article> getArticlesFromJSON(ArrayList<String> json)
     {
         final String TITLE = "title";
         final String SCORE = "score";
@@ -216,7 +216,7 @@ public class HackerNewsAPI
      * @param jsonDate the UNIX timestamp
      * @return the formatted human-readable date as a string
      */
-    private static String formatDateFromUnix(String jsonDate)
+    private String formatDateFromUnix(String jsonDate)
     {
         // https://stackoverflow.com/a/17433005
         long unixSeconds = Long.parseLong(jsonDate);
