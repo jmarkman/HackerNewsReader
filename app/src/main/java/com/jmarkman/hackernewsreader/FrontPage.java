@@ -11,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -29,20 +28,13 @@ public class FrontPage extends AppCompatActivity
 
         rvArticles = findViewById(R.id.rv_front_page_articles);
         loadingProgress = findViewById(R.id.front_page_progress);
-        scrollListener = new EndlessRecyclerViewScrollListener()
-        {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view)
-            {
-                loadMoreArticles(page);
-            }
-        };
 
         rvArticles.addOnScrollListener(scrollListener);
 
         try
         {
-            URL topStories = HackerNewsAPI.buildTopStoriesURL();
+            HackerNewsAPI hnAPI = new HackerNewsAPI();
+            URL topStories = hnAPI.buildTopStoriesURL();
             new ArticleQueryTask().execute(topStories);
         }
         catch (Exception ex)
@@ -69,7 +61,9 @@ public class FrontPage extends AppCompatActivity
     public class ArticleQueryTask extends AsyncTask<URL, Void, ArrayList<String>>
     {
         @Override
-        protected ArrayList<String> doInBackground(URL... urls) {
+        protected ArrayList<String> doInBackground(URL... urls)
+        {
+            HackerNewsAPI hnAPI = new HackerNewsAPI();
             URL searchURL = urls[0];
             String articleIDJSON = null; // variable for storing article ID JSON
             ArrayList<String> result = new ArrayList<>(); // variable for storing story response JSON
@@ -77,18 +71,18 @@ public class FrontPage extends AppCompatActivity
             try
             {
                 // Get the JSON array filled with the article IDs
-                articleIDJSON = HackerNewsAPI.getJSON(searchURL);
+                articleIDJSON = hnAPI.getJSON(searchURL);
 
                 // Store the article IDs in an ArrayList to turn them into URLs for API requests
-                ArrayList<String> articleIDs = HackerNewsAPI.getStoryIDsFromJSON(articleIDJSON);
+                ArrayList<String> articleIDs = hnAPI.getStoryIDsFromJSON(articleIDJSON);
 
                 // For each API request in articleIDs, build the API request for each story,
                 // retrieve the JSON response as a string, and store the response in an
                 // ArrayList to be returned to onPostExecute
                 for (String url : articleIDs)
                 {
-                    URL articleURL = HackerNewsAPI.buildStoryURL(url);
-                    String jsonResult = HackerNewsAPI.getJSON(articleURL);
+                    URL articleURL = hnAPI.buildStoryURL(url);
+                    String jsonResult = hnAPI.getJSON(articleURL);
                     result.add(jsonResult);
                 }
             }
@@ -102,6 +96,8 @@ public class FrontPage extends AppCompatActivity
         @Override
         protected void onPostExecute(ArrayList<String> result)
         {
+            HackerNewsAPI hnAPI = new HackerNewsAPI();
+            Article article;
             // Create a reference to the TextView that is used to display errors
             TextView tvError = findViewById(R.id.front_page_error);
             // Make sure that the progress bar is invisible once all tasks are done
@@ -123,13 +119,13 @@ public class FrontPage extends AppCompatActivity
             // an article object, and then put that object in an ArrayList of Articles
             // Then, use that ArrayList as the source for our ArticleAdapter, and
             // finally set the RecyclerView to use that adapter
-            allArticles = HackerNewsAPI.getArticlesFromJSON(result);
-            ArrayList<Article> articleGroup = new ArrayList<>();
-            for (int i = 0; i < 9; i++)
+            for (String json : result)
             {
-                articleGroup.add(allArticles.get(i));
+                article = hnAPI.getArticleFromJSON(json);
+                allArticles.add(article);
             }
-            ArticleAdapter adapter = new ArticleAdapter(articleGroup);
+
+            ArticleAdapter adapter = new ArticleAdapter(allArticles);
 
             rvArticles.setAdapter(adapter);
         }

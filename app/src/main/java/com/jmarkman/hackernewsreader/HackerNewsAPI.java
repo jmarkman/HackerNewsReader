@@ -18,15 +18,15 @@ import java.util.Scanner;
 
 public class HackerNewsAPI
 {
-    private static final String API_URL = "https://hacker-news.firebaseio.com";
+    private final String API_URL = "https://hacker-news.firebaseio.com";
 
-    private HackerNewsAPI() { }
+    public HackerNewsAPI() { }
 
     /**
      * Constructs the top stories API url
      * @return the top stories API url as a URL
      */
-    public static URL buildTopStoriesURL()
+    public URL buildTopStoriesURL()
     {
         URL url = null;
 
@@ -53,7 +53,7 @@ public class HackerNewsAPI
      * @param json the response JSON from the top stories API call
      * @return an array list of type string
      */
-    public static ArrayList<String> getStoryIDsFromJSON(String json)
+    public ArrayList<String> getStoryIDsFromJSON(String json)
     {
         ArrayList<String> articleIDs = new ArrayList<>();
         try
@@ -77,7 +77,7 @@ public class HackerNewsAPI
      * @param storyId the story ID to access as a string
      * @return the story API url as a URL
      */
-    public static URL buildStoryURL(String storyId)
+    public URL buildStoryURL(String storyId)
     {
         URL url = null;
 
@@ -106,7 +106,7 @@ public class HackerNewsAPI
      * @return - the JSON results as a String
      * @throws IOException
      */
-    public static String getJSON(URL url) throws IOException
+    public String getJSON(URL url) throws IOException
     {
         // Establish connection to API
         HttpURLConnection conn =  (HttpURLConnection) url.openConnection();
@@ -146,7 +146,7 @@ public class HackerNewsAPI
      * @param json an ArrayList of strings that represent the JSON for each article
      * @return an ArrayList of Article objects
      */
-    public static ArrayList<Article> getArticlesFromJSON(ArrayList<String> json)
+    public Article getArticleFromJSON(String json)
     {
         final String TITLE = "title";
         final String SCORE = "score";
@@ -155,60 +155,51 @@ public class HackerNewsAPI
         final String DATE = "time";
         final String USER = "by";
 
-        ArrayList<Article> articles = new ArrayList<>();
+        Article article = null;
 
         try
         {
-            int numArticles = json.size();
+            JSONObject articleJSON = new JSONObject(json);
 
-            for (int i = 0; i < numArticles; i++)
+            String articleURL;
+            String numComments;
+            String normalDate;
+
+            if (articleJSON.has(ARTICLE_URL))
             {
-                JSONObject articleJSON = new JSONObject(json.get(i));
-
-                String articleURL;
-                String numComments;
-                String normalDate;
-
-                if (articleJSON.has(ARTICLE_URL))
-                {
-                    articleURL = articleJSON.getString(ARTICLE_URL);
-                }
-                else
-                {
-                    articleURL = "HN Thread";
-                }
-
-                if (articleJSON.has(COMMENTS))
-                {
-                    numComments = articleJSON.getString(COMMENTS);
-                }
-                else
-                {
-                    numComments = "0";
-                }
-
-                normalDate = formatDateFromUnix(articleJSON.getString(DATE));
-
-
-                Article article = new Article(
-                        articleJSON.getString(TITLE),
-                        articleURL,
-                        normalDate,
-                        numComments,
-                        articleJSON.getString(USER),
-                        articleJSON.getString(SCORE)
-                );
-
-                articles.add(article);
+                articleURL = articleJSON.getString(ARTICLE_URL);
             }
+            else
+            {
+                articleURL = "HN Thread";
+            }
+
+            if (articleJSON.has(COMMENTS))
+            {
+                numComments = articleJSON.getString(COMMENTS);
+            }
+            else
+            {
+                numComments = "0";
+            }
+
+            normalDate = formatDateFromUnix(articleJSON.getString(DATE));
+
+            article = new Article(
+                    articleJSON.getString(TITLE),
+                    articleURL,
+                    normalDate,
+                    numComments,
+                    articleJSON.getString(USER),
+                    articleJSON.getString(SCORE)
+            );
         }
         catch (JSONException jse)
         {
             jse.printStackTrace();
-
         }
 
-        return articles;
+        return article;
     }
 
     /**
@@ -216,7 +207,7 @@ public class HackerNewsAPI
      * @param jsonDate the UNIX timestamp
      * @return the formatted human-readable date as a string
      */
-    private static String formatDateFromUnix(String jsonDate)
+    private String formatDateFromUnix(String jsonDate)
     {
         // https://stackoverflow.com/a/17433005
         long unixSeconds = Long.parseLong(jsonDate);
