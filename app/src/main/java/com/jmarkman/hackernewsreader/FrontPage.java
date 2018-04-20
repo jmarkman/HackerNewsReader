@@ -11,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -21,7 +20,6 @@ public class FrontPage extends AppCompatActivity
     private RecyclerView rvArticles;
     private EndlessRecyclerViewScrollListener scrollListener;
     private ArrayList<Article> allArticles;
-    private ArrayList<Article> articleGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,23 +28,6 @@ public class FrontPage extends AppCompatActivity
 
         rvArticles = findViewById(R.id.rv_front_page_articles);
         loadingProgress = findViewById(R.id.front_page_progress);
-
-        // Create a LayoutManager for the RecyclerView
-        // A LayoutManager is responsible for measuring and positioning item views within a
-        // RecyclerView as well as determining the policy for when to recycle item views
-        // that are no longer visible to the user.
-        // https://developer.android.com/reference/android/support/v7/widget/RecyclerView.LayoutManager.html
-        LinearLayoutManager articlesLayoutManager =
-                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-
-        scrollListener = new EndlessRecyclerViewScrollListener(articlesLayoutManager)
-        {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view)
-            {
-                loadMoreArticles(page);
-            }
-        };
 
         rvArticles.addOnScrollListener(scrollListener);
 
@@ -62,18 +43,19 @@ public class FrontPage extends AppCompatActivity
             ex.printStackTrace();
         }
 
-
+        // Create a LayoutManager for the RecyclerView
+        // A LayoutManager is responsible for measuring and positioning item views within a
+        // RecyclerView as well as determining the policy for when to recycle item views
+        // that are no longer visible to the user.
+        // https://developer.android.com/reference/android/support/v7/widget/RecyclerView.LayoutManager.html
+        LinearLayoutManager articlesLayoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvArticles.setLayoutManager(articlesLayoutManager);
     }
 
     private void loadMoreArticles(int offset)
     {
-        for (int i = offset; i < offset + 10; i++)
-        {
-            articleGroup.add(allArticles.get(i));
-        }
 
-        ArticleAdapter adapter = new ArticleAdapter(articleGroup);
     }
 
     public class ArticleQueryTask extends AsyncTask<URL, Void, ArrayList<String>>
@@ -115,6 +97,7 @@ public class FrontPage extends AppCompatActivity
         protected void onPostExecute(ArrayList<String> result)
         {
             HackerNewsAPI hnAPI = new HackerNewsAPI();
+            Article article;
             // Create a reference to the TextView that is used to display errors
             TextView tvError = findViewById(R.id.front_page_error);
             // Make sure that the progress bar is invisible once all tasks are done
@@ -136,14 +119,13 @@ public class FrontPage extends AppCompatActivity
             // an article object, and then put that object in an ArrayList of Articles
             // Then, use that ArrayList as the source for our ArticleAdapter, and
             // finally set the RecyclerView to use that adapter
-            allArticles = hnAPI.getArticlesFromJSON(result);
-
-            articleGroup = new ArrayList<>();
-            for (int i = 0; i < 9; i++)
+            for (String json : result)
             {
-                articleGroup.add(allArticles.get(i));
+                article = hnAPI.getArticleFromJSON(json);
+                allArticles.add(article);
             }
-            ArticleAdapter adapter = new ArticleAdapter(articleGroup);
+
+            ArticleAdapter adapter = new ArticleAdapter(allArticles);
 
             rvArticles.setAdapter(adapter);
         }

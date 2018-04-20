@@ -146,7 +146,7 @@ public class HackerNewsAPI
      * @param json an ArrayList of strings that represent the JSON for each article
      * @return an ArrayList of Article objects
      */
-    public ArrayList<Article> getArticlesFromJSON(ArrayList<String> json)
+    public Article getArticleFromJSON(String json)
     {
         final String TITLE = "title";
         final String SCORE = "score";
@@ -155,60 +155,51 @@ public class HackerNewsAPI
         final String DATE = "time";
         final String USER = "by";
 
-        ArrayList<Article> articles = new ArrayList<>();
+        Article article = null;
 
         try
         {
-            int numArticles = json.size();
+            JSONObject articleJSON = new JSONObject(json);
 
-            for (int i = 0; i < numArticles; i++)
+            String articleURL;
+            String numComments;
+            String normalDate;
+
+            if (articleJSON.has(ARTICLE_URL))
             {
-                JSONObject articleJSON = new JSONObject(json.get(i));
-
-                String articleURL;
-                String numComments;
-                String normalDate;
-
-                if (articleJSON.has(ARTICLE_URL))
-                {
-                    articleURL = articleJSON.getString(ARTICLE_URL);
-                }
-                else
-                {
-                    articleURL = "HN Thread";
-                }
-
-                if (articleJSON.has(COMMENTS))
-                {
-                    numComments = articleJSON.getString(COMMENTS);
-                }
-                else
-                {
-                    numComments = "0";
-                }
-
-                normalDate = formatDateFromUnix(articleJSON.getString(DATE));
-
-
-                Article article = new Article(
-                        articleJSON.getString(TITLE),
-                        articleURL,
-                        normalDate,
-                        numComments,
-                        articleJSON.getString(USER),
-                        articleJSON.getString(SCORE)
-                );
-
-                articles.add(article);
+                articleURL = articleJSON.getString(ARTICLE_URL);
             }
+            else
+            {
+                articleURL = "HN Thread";
+            }
+
+            if (articleJSON.has(COMMENTS))
+            {
+                numComments = articleJSON.getString(COMMENTS);
+            }
+            else
+            {
+                numComments = "0";
+            }
+
+            normalDate = formatDateFromUnix(articleJSON.getString(DATE));
+
+            article = new Article(
+                    articleJSON.getString(TITLE),
+                    articleURL,
+                    normalDate,
+                    numComments,
+                    articleJSON.getString(USER),
+                    articleJSON.getString(SCORE)
+            );
         }
         catch (JSONException jse)
         {
             jse.printStackTrace();
-
         }
 
-        return articles;
+        return article;
     }
 
     /**

@@ -15,6 +15,7 @@
     For the ImageView, set the layout_width to 0dp to maintain uniform icon size
     and take advantage of the weightSum XML property
     -->
+    <!-- TODO: Extract resource values to XML file -->
     <ImageView
         android:layout_width="0dp"
         android:layout_weight="15"

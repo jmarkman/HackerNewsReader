@@ -12,6 +12,7 @@
     but won't render unless the RecyclerView is set to wrap
     https://stackoverflow.com/a/30409623
     -->
+    <!-- TODO: Extract resource values to XML file -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_front_page_articles"
         android:layout_width="match_parent"
