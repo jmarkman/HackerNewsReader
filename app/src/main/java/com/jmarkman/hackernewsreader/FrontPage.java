@@ -18,7 +18,6 @@ public class FrontPage extends AppCompatActivity
 {
     private ProgressBar loadingProgress;
     private RecyclerView rvArticles;
-    private EndlessRecyclerViewScrollListener scrollListener;
     private ArrayList<Article> allArticles;
 
     @Override
@@ -28,8 +27,6 @@ public class FrontPage extends AppCompatActivity
 
         rvArticles = findViewById(R.id.rv_front_page_articles);
         loadingProgress = findViewById(R.id.front_page_progress);
-
-        rvArticles.addOnScrollListener(scrollListener);
 
         try
         {
@@ -51,11 +48,6 @@ public class FrontPage extends AppCompatActivity
         LinearLayoutManager articlesLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvArticles.setLayoutManager(articlesLayoutManager);
-    }
-
-    private void loadMoreArticles(int offset)
-    {
-
     }
 
     public class ArticleQueryTask extends AsyncTask<URL, Void, ArrayList<String>>
@@ -98,6 +90,7 @@ public class FrontPage extends AppCompatActivity
         {
             HackerNewsAPI hnAPI = new HackerNewsAPI();
             Article article;
+            allArticles = new ArrayList<>();
             // Create a reference to the TextView that is used to display errors
             TextView tvError = findViewById(R.id.front_page_error);
             // Make sure that the progress bar is invisible once all tasks are done
