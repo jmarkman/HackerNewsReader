@@ -18,7 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ArticleDetail"></activity>
+        <activity android:name=".ArticleDetail"
+                    android:parentActivityName=".FrontPage"></activity>
     </application>
 
 </manifest>
