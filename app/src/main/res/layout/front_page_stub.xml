@@ -18,7 +18,7 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_weight="15"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/image_default_height"
         android:layout_gravity="left|center"
         app:srcCompat="@drawable/newspaper_icon"
         android:padding="8dp"/>
@@ -35,13 +35,13 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="Title TextView"
-            android:textSize="16sp" />
+            android:textSize="@dimen/stub_title_size" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/stub_article_source"
-            android:textSize="12sp"
+            android:textSize="@dimen/stub_url_size"
             android:maxLines="1"
             android:text="Source TextView"/>
 
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/stub_article_date"
-                android:textSize="10sp"
+                android:textSize="@dimen/stub_metadata_info_size"
                 android:textAlignment="textStart"
                 android:layout_gravity="start"
                 android:layout_weight="50"
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/stub_submitter"
                 android:layout_weight="50"
-                android:textSize="10sp"
+                android:textSize="@dimen/stub_metadata_info_size"
                 android:text="Submitter TextView"
                 android:textAlignment="textStart"
                 android:layout_gravity="start"/>
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/stub_article_score"
                 android:layout_weight="50"
-                android:textSize="10sp"
+                android:textSize="@dimen/stub_metadata_info_size"
                 android:text="Score TextView"/>
 
             <TextView
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/stub_article_comments"
                 android:layout_weight="50"
-                android:textSize="10sp"
+                android:textSize="@dimen/stub_metadata_info_size"
                 android:text="Comments TextView"/>
 
         </LinearLayout>

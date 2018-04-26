@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HackerNewsReader</string>
+    <string name="conn_error">There was an error in retrieving the articles. Please check your internet connection and try again.</string>
 </resources>
