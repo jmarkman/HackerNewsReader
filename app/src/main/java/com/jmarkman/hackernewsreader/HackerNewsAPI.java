@@ -19,6 +19,7 @@ import java.util.Scanner;
 public class HackerNewsAPI
 {
     private static final String API_URL = "https://hacker-news.firebaseio.com";
+    private static final String HN_ARTICLE_URL = "https://news.ycombinator.com/item?id=";
 
     private HackerNewsAPI() { }
 
@@ -140,7 +141,6 @@ public class HackerNewsAPI
         }
     }
 
-    // TODO: Make sure that all params returned from JSON always contain information
     /**
      * Fetches the JSON for each article and stores each article in an Article object
      * @param json an ArrayList of strings that represent the JSON for each article
@@ -154,6 +154,7 @@ public class HackerNewsAPI
         final String COMMENTS = "descendants";
         final String DATE = "time";
         final String USER = "by";
+        final String ID = "id";
 
         ArrayList<Article> articles = new ArrayList<>();
 
@@ -175,7 +176,7 @@ public class HackerNewsAPI
                 }
                 else
                 {
-                    articleURL = "HN Thread";
+                    articleURL = HN_ARTICLE_URL + articleJSON.getString(ID);
                 }
 
                 if (articleJSON.has(COMMENTS))
@@ -196,7 +197,8 @@ public class HackerNewsAPI
                         normalDate,
                         numComments,
                         articleJSON.getString(USER),
-                        articleJSON.getString(SCORE)
+                        articleJSON.getString(SCORE),
+                        articleJSON.getString(ID)
                 );
 
                 articles.add(article);

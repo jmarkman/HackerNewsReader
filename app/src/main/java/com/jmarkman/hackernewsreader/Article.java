@@ -11,8 +11,9 @@ public class Article implements Parcelable
     public String numComments;
     public String submittedBy;
     public String userScore;
+    public String articleID;
 
-    public Article(String articleTitle, String articleUrl, String submissionTime, String numComments, String submittedBy, String userScore)
+    public Article(String articleTitle, String articleUrl, String submissionTime, String numComments, String submittedBy, String userScore, String articleID)
     {
         this.articleTitle = articleTitle;
         this.articleUrl = articleUrl;
@@ -20,6 +21,7 @@ public class Article implements Parcelable
         this.numComments = numComments;
         this.submittedBy = submittedBy;
         this.userScore = userScore;
+        this.articleID = articleID;
     }
 
 
@@ -31,6 +33,7 @@ public class Article implements Parcelable
         numComments = in.readString();
         submittedBy = in.readString();
         userScore = in.readString();
+        articleID = in.readString();
     }
 
     public static final Creator<Article> CREATOR = new Creator<Article>()
@@ -63,5 +66,6 @@ public class Article implements Parcelable
         parcel.writeString(numComments);
         parcel.writeString(submittedBy);
         parcel.writeString(userScore);
+        parcel.writeString(articleID);
     }
 }

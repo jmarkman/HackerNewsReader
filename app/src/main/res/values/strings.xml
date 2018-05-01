@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">HackerNewsReader</string>
     <string name="conn_error">There was an error in retrieving the articles. Please check your internet connection and try again.</string>
+    <string name="bookmark_btn">Bookmark</string>
+    <string name="url_lbl">Source:</string>
+    <string name="user_lbl">Submitted by:</string>
+    <string name="date_lbl">Submitted on:</string>
 </resources>
