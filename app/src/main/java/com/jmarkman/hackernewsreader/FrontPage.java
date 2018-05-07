@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,6 +48,28 @@ public class FrontPage extends AppCompatActivity
         LinearLayoutManager articlesLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvArticles.setLayoutManager(articlesLayoutManager);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.frontpage_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+
+        switch (id)
+        {
+            case R.id.menu_bookmarks:
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return false;
     }
 
     public class ArticleQueryTask extends AsyncTask<URL, Void, ArrayList<String>>
