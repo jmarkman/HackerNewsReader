@@ -1,25 +1,50 @@
 package com.jmarkman.hackernewsreader;
 
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.jmarkman.hackernewsreader.model.Bookmarks;
+import com.jmarkman.hackernewsreader.data.BookmarkContract;
+import com.jmarkman.hackernewsreader.data.DatabaseHelper;
+import com.jmarkman.hackernewsreader.data.BookmarkContract.BookmarksEntry;
 
 public class BookmarksList extends AppCompatActivity {
-
-    Bookmarks bookmark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmarks_list);
 
-        Intent intent = getIntent();
-        bookmark = (Bookmarks) intent.getSerializableExtra("bookmarks");
+        DatabaseHelper helper = new DatabaseHelper(this);
+        new BookmarkQueryTask().execute(helper);
+    }
 
-        ActivityBookmarksBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_bookmarks_list);
-        binding.setBookmarks(bookmark);
+
+    public class BookmarkQueryTask extends AsyncTask<DatabaseHelper, Void, Cursor>
+    {
+
+        @Override
+        protected Cursor doInBackground(DatabaseHelper... databaseHelpers) {
+            SQLiteDatabase database = databaseHelpers[0].getReadableDatabase();
+
+            String[] columns = {
+                    BookmarksEntry.ARTICLE_TITLE,
+                    BookmarksEntry.SOURCE_URL,
+                    BookmarksEntry.DATE_SUBMITTED,
+                    BookmarksEntry.SUBMITTED_BY
+            };
+
+            Cursor cursor = database.query(BookmarksEntry.TABLE_NAME, columns, null, null, null, null, null);
+
+            return cursor;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor bookmarksCursor)
+        {
+
+        }
     }
 }
